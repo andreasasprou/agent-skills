@@ -1,0 +1,30 @@
+{
+	"name": "safety-net",
+	"version": "0.1.0",
+	"description": "Block destructive commands across Claude Code and OpenCode",
+	"type": "module",
+	"private": true,
+	"bin": {
+		"safety-net": "./bin/safety-net.js"
+	},
+	"exports": {
+		".": "./src/index.ts",
+		"./analyzer": "./src/analyzer.ts"
+	},
+	"scripts": {
+		"dev": "bun run src/index.ts",
+		"build": "bun build src/index.ts --outdir=dist --target=node",
+		"build:bin": "bun build src/index.ts --compile --outfile=bin/safety-net",
+		"test": "bun test",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.10",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

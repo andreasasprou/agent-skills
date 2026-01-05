@@ -1,0 +1,12 @@
+{
+  "name": "oracle",
+  "description": "Ask the Oracle (GPT-5.2 with deep reasoning) strategic technical questions. Read-only advisor for architecture, security, and complex debugging.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Andreas Asprou"
+  },
+  "homepage": "https://github.com/andreasasprou/oracle-skill",
+  "repository": "https://github.com/andreasasprou/oracle-skill",
+  "license": "MIT",
+  "keywords": ["oracle", "gpt-5.2", "codex", "reasoning", "advisor"]
+}

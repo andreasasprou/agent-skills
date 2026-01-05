@@ -1,0 +1,12 @@
+{
+  "name": "safety-net",
+  "description": "Block destructive shell commands before execution. Prevents rm -rf, git push --force, AWS deletions, and more.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Andreas Asprou"
+  },
+  "homepage": "https://github.com/andreasasprou/agent-skills",
+  "repository": "https://github.com/andreasasprou/agent-skills",
+  "license": "MIT",
+  "keywords": ["safety", "hooks", "security", "destructive", "block", "rm", "git", "aws"]
+}
