@@ -10,12 +10,12 @@
   "plugins": [
     {
       "name": "oracle",
-      "source": "./oracle",
+      "source": "./plugins/oracle",
       "description": "GPT-5.2 strategic advisor with deep reasoning. Read-only access for architecture decisions, security analysis, and complex debugging."
     },
     {
       "name": "safety-net",
-      "source": "./safety-net",
+      "source": "./plugins/safety-net",
       "description": "Block destructive shell commands before execution. Prevents rm -rf, git push --force, AWS deletions, and more."
     }
   ]
