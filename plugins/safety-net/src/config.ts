@@ -45,6 +45,10 @@ export function loadConfig(): AnalyzerOptions {
 		disableGit: parseBoolEnv(process.env.SAFETY_NET_DISABLE_GIT),
 		disableRm: parseBoolEnv(process.env.SAFETY_NET_DISABLE_RM),
 		disableAws: parseBoolEnv(process.env.SAFETY_NET_DISABLE_AWS),
+		disablePulumi: parseBoolEnv(process.env.SAFETY_NET_DISABLE_PULUMI),
+		paranoidPulumi: parseBoolEnv(process.env.SAFETY_NET_PARANOID_PULUMI),
+		disableStripe: parseBoolEnv(process.env.SAFETY_NET_DISABLE_STRIPE),
+		paranoidStripe: parseBoolEnv(process.env.SAFETY_NET_PARANOID_STRIPE),
 		tempRoots:
 			parseListEnv(process.env.SAFETY_NET_TEMP_ROOTS) ?? DEFAULT_TEMP_ROOTS,
 		maxRecursionDepth: parseIntEnv(
@@ -71,6 +75,10 @@ export function mergeConfig(
 		disableGit: options.disableGit ?? config.disableGit,
 		disableRm: options.disableRm ?? config.disableRm,
 		disableAws: options.disableAws ?? config.disableAws,
+		disablePulumi: options.disablePulumi ?? config.disablePulumi,
+		paranoidPulumi: options.paranoidPulumi ?? config.paranoidPulumi,
+		disableStripe: options.disableStripe ?? config.disableStripe,
+		paranoidStripe: options.paranoidStripe ?? config.paranoidStripe,
 		tempRoots: options.tempRoots ?? config.tempRoots,
 		maxRecursionDepth: options.maxRecursionDepth ?? config.maxRecursionDepth,
 		maxSegments: options.maxSegments ?? config.maxSegments,

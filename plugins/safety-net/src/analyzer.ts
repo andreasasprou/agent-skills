@@ -7,6 +7,8 @@ import { loadConfig, mergeConfig } from "./config.ts";
 import { analyzeAwsCommand } from "./rules/aws.ts";
 import { analyzeFilesystemCommand } from "./rules/filesystem.ts";
 import { analyzeGitCommand } from "./rules/git.ts";
+import { analyzePulumiCommand } from "./rules/pulumi.ts";
+import { analyzeStripeCommand } from "./rules/stripe.ts";
 import { tokenize } from "./shell/parser.ts";
 import { hasUnparseableConstructs, splitCommand } from "./shell/splitter.ts";
 import {
@@ -49,6 +51,16 @@ function analyzeSegment(
 
 	if (!options.disableAws && cmdName === "aws") {
 		const result = analyzeAwsCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disablePulumi && cmdName === "pulumi") {
+		const result = analyzePulumiCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableStripe && cmdName === "stripe") {
+		const result = analyzeStripeCommand(segment, options);
 		if (result.decision !== "allow") return result;
 	}
 
