@@ -9,6 +9,7 @@ import { analyzeFilesystemCommand } from "./rules/filesystem.ts";
 import { analyzeGitCommand } from "./rules/git.ts";
 import { analyzePulumiCommand } from "./rules/pulumi.ts";
 import { analyzeStripeCommand } from "./rules/stripe.ts";
+import { analyzeSystemCommand } from "./rules/system.ts";
 import { tokenize } from "./shell/parser.ts";
 import { hasUnparseableConstructs, splitCommand } from "./shell/splitter.ts";
 import {
@@ -61,6 +62,14 @@ function analyzeSegment(
 
 	if (!options.disableStripe && cmdName === "stripe") {
 		const result = analyzeStripeCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (
+		!options.disableSystem &&
+		(cmdName === "kill" || cmdName === "killall" || cmdName === "pkill")
+	) {
+		const result = analyzeSystemCommand(segment, options);
 		if (result.decision !== "allow") return result;
 	}
 
