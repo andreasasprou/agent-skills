@@ -6,62 +6,65 @@ Curated plugins for Claude Code - skills, hooks, and tools.
 
 ```bash
 # Add the marketplace (once)
-/plugin marketplace add andreasasprou/agent-skills
+/plugin marketplace add https://github.com/andreasasprou/agent-skills
 
-# Install plugins you want
-/plugin install oracle@agent-skills
-/plugin install safety-net@agent-skills
-
-# Restart Claude Code to load plugins
+# Install plugins
+/plugin install oracle@andreas-agent-skills
+/plugin install safety-net@andreas-agent-skills
+/plugin install opensrc@andreas-agent-skills
 ```
 
-## Available Plugins
+## Plugins
 
 ### Oracle
 
-GPT-5.2 strategic technical advisor with deep reasoning capabilities.
+GPT-5.2 strategic advisor with deep reasoning.
 
-**What it does:**
-- Consults GPT-5.2 with `xhigh` reasoning for architecture decisions, security analysis, and complex debugging
-- Read-only sandbox - can explore your codebase but cannot modify anything
-- Structured tiered responses (Essential → Expanded → Edge Cases)
-
-**Use when:** You need a second opinion on technical decisions.
+- Consults GPT-5.2 with `xhigh` reasoning effort
+- Read-only sandbox (can explore but not modify)
+- Use for architecture decisions, security analysis, complex debugging
 
 ```bash
-/plugin install oracle@agent-skills
+/plugin install oracle@andreas-agent-skills
 ```
 
 ### Safety Net
 
 Block destructive shell commands before execution.
 
-**What it blocks:**
-- `rm -rf /`, `rm -rf ~`, `rm -rf .`
-- `git reset --hard`, `git push --force`, `git clean -f`
-- `aws ec2 terminate-instances`, `s3 rb --force`, `rds delete-db-instance`
+**Blocks:**
+- Filesystem: `rm -rf /`, `rm -rf ~`
+- Git: `git reset --hard`, `git push --force`
+- AWS: `terminate-instances`, `delete-db-instance`, `s3 rb --force`
+- Pulumi: `pulumi destroy`, `pulumi stack rm --force`
+- Stripe: `stripe delete --live`, `stripe refunds create --live`
+- System: `kill -9 1`, `killall -9`
 
-**Decisions:**
-- `deny` - Command blocked
-- `warn` - User prompted to confirm
-- `allow` - Command executes normally
-
-**Prerequisites:** Requires [Bun](https://bun.sh) installed.
-
+**Requires [Bun](https://bun.sh):**
 ```bash
 curl -fsSL https://bun.sh/install | bash
-/plugin install safety-net@agent-skills
+/plugin install safety-net@andreas-agent-skills
 ```
 
-## Updating Plugins
+### opensrc
+
+Fetch npm package source code for implementation analysis.
+
+- Use when types/docs aren't enough
+- Explore how libraries work internally
+- Debug unexpected behavior
 
 ```bash
-# Update marketplace
-/plugin marketplace update agent-skills
+/plugin install opensrc@andreas-agent-skills
 
-# Reinstall to get latest
-/plugin uninstall oracle@agent-skills
-/plugin install oracle@agent-skills
+# Usage (via skill)
+npx opensrc ai zod @anthropic-ai/sdk
+```
+
+## Updating
+
+```bash
+/plugin marketplace update andreas-agent-skills
 ```
 
 ## License
