@@ -17,6 +17,11 @@
       "name": "safety-net",
       "source": "./plugins/safety-net",
       "description": "Block destructive shell commands before execution. Prevents rm -rf, git push --force, AWS deletions, and more."
+    },
+    {
+      "name": "opensrc",
+      "source": "./plugins/opensrc",
+      "description": "Fetch npm package source code for deep implementation analysis. Use when types/docs aren't enough."
     }
   ]
 }
