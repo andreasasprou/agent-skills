@@ -1,0 +1,6 @@
+{
+  "name": "opensrc",
+  "version": "1.0.0",
+  "description": "Fetch npm package source code for deep implementation analysis",
+  "skills": ["./skills/opensrc"]
+}

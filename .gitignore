@@ -3,5 +3,5 @@ dist/
 *.log
 .DS_Store
 
-# opensrc - source code for packages
-opensrc/
+# opensrc - fetched package source code (not the plugin)
+/opensrc/
