@@ -30,6 +30,7 @@ trap "rm -f $OUTPUT_FILE" EXIT
 
 # Combine system prompt and user question, pass via stdin
 # Configuration:
+#   --full-auto                         : Automation preset (bypasses interactive prompts)
 #   -m gpt-5.2                          : Use GPT-5.2 model
 #   -c model_reasoning_effort=xhigh     : Maximum reasoning depth
 #   -c approval_policy=never            : No approval prompts (advisory only)
@@ -40,6 +41,7 @@ trap "rm -f $OUTPUT_FILE" EXIT
 #   --skip-git-repo-check               : Allow running outside git repos
 
 cat <<EOF | codex exec \
+    --full-auto \
     -m gpt-5.2 \
     -c model_reasoning_effort=xhigh \
     -c approval_policy=never \
