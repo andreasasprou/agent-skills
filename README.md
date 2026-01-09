@@ -33,12 +33,12 @@ GPT-5.2 strategic advisor with deep reasoning.
 Block destructive shell commands before execution.
 
 **Blocks:**
-- Filesystem: `rm -rf /`, `rm -rf ~`
+- Filesystem: `rm -rf /`, `rm -rf ~`, `rmdir`, `shred`, `truncate`, `dd of=`, `mkfs`
 - Git: `git reset --hard`, `git push --force`
 - AWS: `terminate-instances`, `delete-db-instance`, `s3 rb --force`
 - Pulumi: `pulumi destroy`, `pulumi stack rm --force`
 - Stripe: `stripe delete --live`, `stripe refunds create --live`
-- System: `kill -9 1`, `killall -9`
+- System: `kill -9 1`, `killall -9`, `shutdown`, `reboot`, `halt`, `poweroff`, `init 0/6`
 
 **Requires [Bun](https://bun.sh):**
 ```bash
