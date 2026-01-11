@@ -259,6 +259,198 @@ function analyzeXargsCommand(
 }
 
 /**
+ * Analyze rmdir command
+ */
+function analyzeRmdirCommand(
+	words: string[],
+	options: AnalyzerOptions,
+): SegmentResult {
+	const args = words.slice(1);
+	const targets = args.filter((arg) => !arg.startsWith("-"));
+
+	// Check for dangerous targets
+	for (const target of targets) {
+		if (isDangerousPath(target, options.cwd)) {
+			return {
+				decision: "deny",
+				rule: "rmdir-dangerous-target",
+				category: "filesystem",
+				reason: `rmdir targeting '${target}' would remove critical directory.`,
+				matchedTokens: ["rmdir", target],
+				confidence: "high",
+			};
+		}
+
+		if (isSystemPath(target)) {
+			return {
+				decision: "deny",
+				rule: "rmdir-system-path",
+				category: "filesystem",
+				reason: `rmdir targeting system path '${target}'.`,
+				matchedTokens: ["rmdir", target],
+				confidence: "high",
+			};
+		}
+	}
+
+	// Warn for any rmdir in paranoid mode
+	if (options.paranoid || options.paranoidRm) {
+		return {
+			decision: "warn",
+			rule: "rmdir-paranoid",
+			category: "filesystem",
+			reason: `rmdir removes directories. Targets: ${targets.join(", ") || "(none)"}`,
+			matchedTokens: ["rmdir", ...targets],
+			confidence: "medium",
+		};
+	}
+
+	return { decision: "allow" };
+}
+
+/**
+ * Analyze shred command - secure file deletion
+ */
+function analyzeShredCommand(
+	words: string[],
+	options: AnalyzerOptions,
+): SegmentResult {
+	const args = words.slice(1);
+	const targets = args.filter((arg) => !arg.startsWith("-"));
+
+	// Check for dangerous targets
+	for (const target of targets) {
+		if (isDangerousPath(target, options.cwd) || isSystemPath(target)) {
+			return {
+				decision: "deny",
+				rule: "shred-dangerous-target",
+				category: "filesystem",
+				reason: `shred targeting '${target}' would permanently destroy critical data.`,
+				matchedTokens: ["shred", target],
+				confidence: "high",
+			};
+		}
+	}
+
+	// shred is always destructive - warn by default, deny in paranoid mode
+	const decision = options.paranoid || options.paranoidRm ? "deny" : "warn";
+	return {
+		decision,
+		rule: "shred",
+		category: "filesystem",
+		reason: `shred permanently destroys file data beyond recovery. Targets: ${targets.join(", ") || "(none)"}`,
+		matchedTokens: ["shred", ...targets],
+		confidence: "high",
+	};
+}
+
+/**
+ * Analyze truncate command - truncates files to specified size
+ */
+function analyzeTruncateCommand(
+	words: string[],
+	options: AnalyzerOptions,
+): SegmentResult {
+	const args = words.slice(1);
+	const targets = args.filter((arg) => !arg.startsWith("-") && !arg.startsWith("--size"));
+
+	// Check if truncating to zero (most destructive)
+	const sizeArg = args.find((arg) => arg.startsWith("-s") || arg.startsWith("--size"));
+	const isZeroTruncate = sizeArg === "-s0" || sizeArg === "-s 0" || sizeArg === "--size=0";
+
+	for (const target of targets) {
+		if (isDangerousPath(target, options.cwd) || isSystemPath(target)) {
+			return {
+				decision: "deny",
+				rule: "truncate-dangerous-target",
+				category: "filesystem",
+				reason: `truncate targeting '${target}' would destroy file contents.`,
+				matchedTokens: ["truncate", target],
+				confidence: "high",
+			};
+		}
+	}
+
+	if (isZeroTruncate || options.paranoid || options.paranoidRm) {
+		return {
+			decision: "warn",
+			rule: "truncate",
+			category: "filesystem",
+			reason: `truncate can destroy file contents. Targets: ${targets.join(", ") || "(none)"}`,
+			matchedTokens: ["truncate", ...targets],
+			confidence: "high",
+		};
+	}
+
+	return { decision: "allow" };
+}
+
+/**
+ * Analyze dd command - direct disk access
+ */
+function analyzeDdCommand(
+	words: string[],
+	_options: AnalyzerOptions,
+): SegmentResult {
+	const args = words.slice(1);
+
+	// Extract of= (output file) target
+	const ofArg = args.find((arg) => arg.startsWith("of="));
+	const outputTarget = ofArg ? ofArg.slice(3) : null;
+
+	// dd writing to block devices or critical paths is extremely dangerous
+	if (outputTarget) {
+		const dangerousDevices = ["/dev/sd", "/dev/hd", "/dev/nvme", "/dev/vd", "/dev/xvd", "/dev/null"];
+		const isDangerousDevice = dangerousDevices.some((d) => outputTarget.startsWith(d));
+
+		if (isDangerousDevice || outputTarget === "/dev/zero") {
+			return {
+				decision: "deny",
+				rule: "dd-device-write",
+				category: "filesystem",
+				reason: `dd writing to '${outputTarget}' can destroy disk data irreversibly.`,
+				matchedTokens: ["dd", `of=${outputTarget}`],
+				confidence: "high",
+			};
+		}
+
+		// Any dd with of= should at least warn
+		return {
+			decision: "warn",
+			rule: "dd-write",
+			category: "filesystem",
+			reason: `dd writing to '${outputTarget}' bypasses filesystem protections.`,
+			matchedTokens: ["dd", `of=${outputTarget}`],
+			confidence: "high",
+		};
+	}
+
+	return { decision: "allow" };
+}
+
+/**
+ * Analyze mkfs command - format filesystem
+ */
+function analyzeMkfsCommand(
+	words: string[],
+	_options: AnalyzerOptions,
+): SegmentResult {
+	const cmd = words[0];
+	const args = words.slice(1);
+	const targets = args.filter((arg) => !arg.startsWith("-"));
+
+	// mkfs is always destructive - it formats the entire device/partition
+	return {
+		decision: "deny",
+		rule: "mkfs-format",
+		category: "filesystem",
+		reason: `${cmd} formats and destroys all data on the target device. Targets: ${targets.join(", ") || "(none)"}`,
+		matchedTokens: [cmd || "mkfs", ...targets],
+		confidence: "high",
+	};
+}
+
+/**
  * Analyze a filesystem command for destructive operations
  */
 export function analyzeFilesystemCommand(
@@ -279,6 +471,18 @@ export function analyzeFilesystemCommand(
 		case "rm":
 			return analyzeRmCommand(words, options);
 
+		case "rmdir":
+			return analyzeRmdirCommand(words, options);
+
+		case "shred":
+			return analyzeShredCommand(words, options);
+
+		case "truncate":
+			return analyzeTruncateCommand(words, options);
+
+		case "dd":
+			return analyzeDdCommand(words, options);
+
 		case "find":
 			return analyzeFindCommand(words, options);
 
@@ -287,6 +491,10 @@ export function analyzeFilesystemCommand(
 			return analyzeXargsCommand(words, command, options);
 
 		default:
+			// Handle mkfs.* variants (mkfs.ext4, mkfs.xfs, etc.)
+			if (cmd?.startsWith("mkfs")) {
+				return analyzeMkfsCommand(words, options);
+			}
 			return { decision: "allow" };
 	}
 }
