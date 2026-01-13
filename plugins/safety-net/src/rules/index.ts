@@ -8,3 +8,4 @@ export { analyzeGitCommand } from "./git.ts";
 export { analyzePulumiCommand } from "./pulumi.ts";
 export { analyzeStripeCommand } from "./stripe.ts";
 export { analyzeSystemCommand } from "./system.ts";
+export { analyzeApiCommand } from "./api.ts";

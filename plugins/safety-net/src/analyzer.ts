@@ -10,6 +10,7 @@ import { analyzeGitCommand } from "./rules/git.ts";
 import { analyzePulumiCommand } from "./rules/pulumi.ts";
 import { analyzeStripeCommand } from "./rules/stripe.ts";
 import { analyzeSystemCommand } from "./rules/system.ts";
+import { analyzeApiCommand } from "./rules/api.ts";
 import { tokenize } from "./shell/parser.ts";
 import { hasUnparseableConstructs, splitCommand } from "./shell/splitter.ts";
 import {
@@ -70,6 +71,11 @@ function analyzeSegment(
 		(cmdName === "kill" || cmdName === "killall" || cmdName === "pkill")
 	) {
 		const result = analyzeSystemCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableApi && cmdName === "curl") {
+		const result = analyzeApiCommand(segment, options);
 		if (result.decision !== "allow") return result;
 	}
 

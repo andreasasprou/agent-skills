@@ -50,6 +50,8 @@ export function loadConfig(): AnalyzerOptions {
 		disableStripe: parseBoolEnv(process.env.SAFETY_NET_DISABLE_STRIPE),
 		paranoidStripe: parseBoolEnv(process.env.SAFETY_NET_PARANOID_STRIPE),
 		disableSystem: parseBoolEnv(process.env.SAFETY_NET_DISABLE_SYSTEM),
+		disableApi: parseBoolEnv(process.env.SAFETY_NET_DISABLE_API),
+		paranoidApi: parseBoolEnv(process.env.SAFETY_NET_PARANOID_API),
 		tempRoots:
 			parseListEnv(process.env.SAFETY_NET_TEMP_ROOTS) ?? DEFAULT_TEMP_ROOTS,
 		maxRecursionDepth: parseIntEnv(
@@ -81,6 +83,8 @@ export function mergeConfig(
 		disableStripe: options.disableStripe ?? config.disableStripe,
 		paranoidStripe: options.paranoidStripe ?? config.paranoidStripe,
 		disableSystem: options.disableSystem ?? config.disableSystem,
+		disableApi: options.disableApi ?? config.disableApi,
+		paranoidApi: options.paranoidApi ?? config.paranoidApi,
 		tempRoots: options.tempRoots ?? config.tempRoots,
 		maxRecursionDepth: options.maxRecursionDepth ?? config.maxRecursionDepth,
 		maxSegments: options.maxSegments ?? config.maxSegments,

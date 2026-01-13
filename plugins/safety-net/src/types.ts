@@ -6,7 +6,7 @@
 export type Decision = "allow" | "warn" | "deny";
 
 /** Categories of rules */
-export type RuleCategory = "git" | "filesystem" | "aws" | "pulumi" | "stripe" | "system";
+export type RuleCategory = "git" | "filesystem" | "aws" | "pulumi" | "stripe" | "system" | "api";
 
 /** Result of analyzing a single command segment */
 export interface SegmentResult {
@@ -42,6 +42,8 @@ export interface AnalyzerOptions {
 	disableStripe?: boolean;
 	paranoidStripe?: boolean;
 	disableSystem?: boolean;
+	disableApi?: boolean;
+	paranoidApi?: boolean;
 	tempRoots?: string[];
 	maxRecursionDepth?: number;
 	maxSegments?: number;
