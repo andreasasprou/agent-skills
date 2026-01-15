@@ -179,6 +179,66 @@ function analyzeKillallCommand(
 }
 
 /**
+ * Analyze shutdown/reboot/halt/poweroff commands
+ */
+function analyzePowerCommand(
+	words: string[],
+	options: AnalyzerOptions,
+): SegmentResult {
+	const cmd = words[0];
+	const args = words.slice(1);
+
+	// Check for cancel flag (safe)
+	if (args.includes("-c") || args.includes("--cancel")) {
+		return { decision: "allow" };
+	}
+
+	// Check for --help or similar
+	if (args.includes("--help") || args.includes("-h")) {
+		return { decision: "allow" };
+	}
+
+	// Power commands are always dangerous
+	return {
+		decision: "deny",
+		rule: `${cmd}-power`,
+		category: "system",
+		reason: `${cmd} will shut down or restart the system.`,
+		matchedTokens: [cmd || "shutdown", ...args.filter((a) => !a.startsWith("-"))],
+		confidence: "high",
+	};
+}
+
+/**
+ * Analyze init command (init 0, init 6, etc.)
+ */
+function analyzeInitCommand(
+	words: string[],
+	_options: AnalyzerOptions,
+): SegmentResult {
+	const args = words.slice(1);
+
+	// init 0 = shutdown, init 6 = reboot
+	const dangerousRunlevels = ["0", "6"];
+	const hasDangerousRunlevel = args.some((arg) => dangerousRunlevels.includes(arg));
+
+	if (hasDangerousRunlevel) {
+		const runlevel = args.find((arg) => dangerousRunlevels.includes(arg));
+		const action = runlevel === "0" ? "shutdown" : "reboot";
+		return {
+			decision: "deny",
+			rule: `init-${action}`,
+			category: "system",
+			reason: `init ${runlevel} will ${action} the system.`,
+			matchedTokens: ["init", runlevel || "0"],
+			confidence: "high",
+		};
+	}
+
+	return { decision: "allow" };
+}
+
+/**
  * Analyze a system/process command for dangerous operations
  */
 export function analyzeSystemCommand(
@@ -202,6 +262,15 @@ export function analyzeSystemCommand(
 		case "killall":
 		case "pkill":
 			return analyzeKillallCommand(words, options);
+
+		case "shutdown":
+		case "reboot":
+		case "halt":
+		case "poweroff":
+			return analyzePowerCommand(words, options);
+
+		case "init":
+			return analyzeInitCommand(words, options);
 
 		default:
 			return { decision: "allow" };

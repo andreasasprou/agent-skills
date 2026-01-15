@@ -43,6 +43,11 @@ function analyzeSegment(
 	if (
 		!options.disableRm &&
 		(cmdName === "rm" ||
+			cmdName === "rmdir" ||
+			cmdName === "shred" ||
+			cmdName === "truncate" ||
+			cmdName === "dd" ||
+			cmdName?.startsWith("mkfs") ||
 			cmdName === "find" ||
 			cmdName === "xargs" ||
 			cmdName === "parallel")
@@ -68,7 +73,14 @@ function analyzeSegment(
 
 	if (
 		!options.disableSystem &&
-		(cmdName === "kill" || cmdName === "killall" || cmdName === "pkill")
+		(cmdName === "kill" ||
+			cmdName === "killall" ||
+			cmdName === "pkill" ||
+			cmdName === "shutdown" ||
+			cmdName === "reboot" ||
+			cmdName === "halt" ||
+			cmdName === "poweroff" ||
+			cmdName === "init")
 	) {
 		const result = analyzeSystemCommand(segment, options);
 		if (result.decision !== "allow") return result;
