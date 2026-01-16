@@ -1,0 +1,15 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "oracle-skill",
+      "dependencies": {
+        "@openai/codex-sdk": "^0.86.0",
+      },
+    },
+  },
+  "packages": {
+    "@openai/codex-sdk": ["@openai/codex-sdk@0.86.0", "", {}, "sha512-FhdeMmaufS3N7noOtfq28YyGA5us+UYpVxL10guUt2gXwMPqJ/7S6D7Ci5KG2e9UECC2OKHkzKtxSHzybvK2/A=="],
+  }
+}
