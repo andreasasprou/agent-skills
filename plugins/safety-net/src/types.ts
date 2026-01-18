@@ -6,7 +6,21 @@
 export type Decision = "allow" | "warn" | "deny";
 
 /** Categories of rules */
-export type RuleCategory = "git" | "filesystem" | "aws" | "pulumi" | "stripe" | "system" | "api";
+export type RuleCategory =
+	| "git"
+	| "filesystem"
+	| "aws"
+	| "pulumi"
+	| "stripe"
+	| "system"
+	| "api"
+	| "docker"
+	| "kubernetes"
+	| "terraform"
+	| "gcloud"
+	| "azure"
+	| "database"
+	| "github";
 
 /** Result of analyzing a single command segment */
 export interface SegmentResult {
@@ -44,6 +58,21 @@ export interface AnalyzerOptions {
 	disableSystem?: boolean;
 	disableApi?: boolean;
 	paranoidApi?: boolean;
+	// New rule categories
+	disableDocker?: boolean;
+	paranoidDocker?: boolean;
+	disableKubernetes?: boolean;
+	paranoidKubernetes?: boolean;
+	disableTerraform?: boolean;
+	paranoidTerraform?: boolean;
+	disableGcloud?: boolean;
+	paranoidGcloud?: boolean;
+	disableAzure?: boolean;
+	paranoidAzure?: boolean;
+	disableDatabase?: boolean;
+	paranoidDatabase?: boolean;
+	disableGithub?: boolean;
+	paranoidGithub?: boolean;
 	tempRoots?: string[];
 	maxRecursionDepth?: number;
 	maxSegments?: number;

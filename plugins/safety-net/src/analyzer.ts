@@ -11,6 +11,13 @@ import { analyzePulumiCommand } from "./rules/pulumi.ts";
 import { analyzeStripeCommand } from "./rules/stripe.ts";
 import { analyzeSystemCommand } from "./rules/system.ts";
 import { analyzeApiCommand } from "./rules/api.ts";
+import { analyzeDockerCommand } from "./rules/docker.ts";
+import { analyzeKubernetesCommand } from "./rules/kubernetes.ts";
+import { analyzeTerraformCommand } from "./rules/terraform.ts";
+import { analyzeGcloudCommand } from "./rules/gcloud.ts";
+import { analyzeAzureCommand } from "./rules/azure.ts";
+import { analyzeDatabaseCommand } from "./rules/database.ts";
+import { analyzeGithubCommand } from "./rules/github.ts";
 import { tokenize } from "./shell/parser.ts";
 import { hasUnparseableConstructs, splitCommand } from "./shell/splitter.ts";
 import {
@@ -24,6 +31,51 @@ import type {
 	SegmentResult,
 } from "./types.ts";
 import { truncateCommand } from "./utils.ts";
+
+/**
+ * Commands handled by each analyzer
+ */
+const SYSTEM_COMMANDS = [
+	"kill",
+	"killall",
+	"pkill",
+	"dd",
+	"mkfs",
+	"mkfs.ext4",
+	"mkfs.ext3",
+	"mkfs.xfs",
+	"mkfs.btrfs",
+	"mkfs.vfat",
+	"mkfs.ntfs",
+	"fdisk",
+	"parted",
+	"gdisk",
+	"cfdisk",
+	"chmod",
+	"chown",
+	"chgrp",
+	"systemctl",
+	"launchctl",
+	"service",
+	"reboot",
+	"shutdown",
+	"halt",
+	"poweroff",
+	"init",
+];
+
+const DOCKER_COMMANDS = ["docker", "docker-compose", "podman"];
+const KUBERNETES_COMMANDS = ["kubectl", "helm"];
+const DATABASE_COMMANDS = [
+	"psql",
+	"dropdb",
+	"mysql",
+	"mysqladmin",
+	"mongo",
+	"mongosh",
+	"mongorestore",
+	"redis-cli",
+];
 
 /**
  * Analyze a single command segment
@@ -66,16 +118,49 @@ function analyzeSegment(
 		if (result.decision !== "allow") return result;
 	}
 
-	if (
-		!options.disableSystem &&
-		(cmdName === "kill" || cmdName === "killall" || cmdName === "pkill")
-	) {
+	if (!options.disableSystem && SYSTEM_COMMANDS.includes(cmdName)) {
 		const result = analyzeSystemCommand(segment, options);
 		if (result.decision !== "allow") return result;
 	}
 
 	if (!options.disableApi && cmdName === "curl") {
 		const result = analyzeApiCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	// New rule categories
+	if (!options.disableDocker && DOCKER_COMMANDS.includes(cmdName)) {
+		const result = analyzeDockerCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableKubernetes && KUBERNETES_COMMANDS.includes(cmdName)) {
+		const result = analyzeKubernetesCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableTerraform && cmdName === "terraform") {
+		const result = analyzeTerraformCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableGcloud && (cmdName === "gcloud" || cmdName === "gsutil")) {
+		const result = analyzeGcloudCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableAzure && cmdName === "az") {
+		const result = analyzeAzureCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableDatabase && DATABASE_COMMANDS.includes(cmdName)) {
+		const result = analyzeDatabaseCommand(segment, options);
+		if (result.decision !== "allow") return result;
+	}
+
+	if (!options.disableGithub && cmdName === "gh") {
+		const result = analyzeGithubCommand(segment, options);
 		if (result.decision !== "allow") return result;
 	}
 
