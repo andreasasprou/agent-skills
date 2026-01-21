@@ -34,13 +34,13 @@ This makes oracle safe to consult without risk of unintended modifications.
 
 ## How to Invoke
 
-**Script location**: `${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.sh`
+**Script location**: `${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts`
 
 ### Foreground (quick questions, <30 seconds expected)
 
 Use Bash tool directly:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.sh "What's the best way to implement rate limiting for this API?"
+${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "What's the best way to implement rate limiting for this API?"
 ```
 
 ### Background (complex questions, longer reasoning)
@@ -49,7 +49,7 @@ For questions that require deep reasoning, run in background and poll:
 
 1. **Start the query** with `run_in_background=true`:
    ```bash
-   ${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.sh "Analyze the security implications of this authentication flow and suggest improvements"
+   ${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "Analyze the security implications of this authentication flow and suggest improvements"
    ```
 
 2. **Continue working** on other tasks while oracle thinks
