@@ -1,7 +1,7 @@
 {
   "name": "oracle",
   "description": "Ask the Oracle (GPT-5.2 with deep reasoning) strategic technical questions. Read-only advisor for architecture, security, and complex debugging.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Andreas Asprou"
   },
