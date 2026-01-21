@@ -40,7 +40,7 @@ This makes oracle safe to consult without risk of unintended modifications.
 
 Use Bash tool directly:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "What's the best way to implement rate limiting for this API?"
+bun ${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "What's the best way to implement rate limiting for this API?"
 ```
 
 ### Background (complex questions, longer reasoning)
@@ -49,7 +49,7 @@ For questions that require deep reasoning, run in background and poll:
 
 1. **Start the query** with `run_in_background=true`:
    ```bash
-   ${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "Analyze the security implications of this authentication flow and suggest improvements"
+   bun ${CLAUDE_PLUGIN_ROOT}/skills/oracle/scripts/oracle.ts "Analyze the security implications of this authentication flow and suggest improvements"
    ```
 
 2. **Continue working** on other tasks while oracle thinks
