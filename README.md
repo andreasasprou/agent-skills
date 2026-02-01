@@ -29,50 +29,67 @@ Claude Code plugins extend the agent with **skills** (new capabilities) and **ho
 
 ### Oracle
 
-A strategic technical advisor powered by GPT-5.2 with deep reasoning (`xhigh` effort).
+Strategic technical advisor with **two complementary modes** for different types of questions.
 
-**When to use:**
-- Architecture decisions
-- Complex debugging
-- Security analysis
-- Trade-off evaluation
-- When you want a second expert opinion
+**Core Question: "Is the truth external, or is it in our code?"**
+
+| Mode | Model | Best For |
+|------|-------|----------|
+| **Repo** | GPT-5.2 xhigh (Codex SDK) | Exploring codebase, finding gaps, code review |
+| **Web** | 5.2 Thinking (default) | Best practices, library comparisons, current docs |
+| **Web** | GPT-5.2-pro (escalation) | Complex multi-source research |
+
+**Repo Mode** - when the answer is in your codebase:
+```bash
+/oracle "What's causing the race condition in the queue processor?"
+/oracle "Audit the blast radius before I refactor the payment service"
+/oracle "Review the uncommitted changes for security issues"
+```
+
+**Web Mode** - when you need external knowledge:
+```bash
+/oracle "Drizzle vs Prisma for heavy read loads - what are teams saying?"
+/oracle "Current security gotchas with Google OAuth?"
+/oracle "Compare Socket.io vs Ably vs Pusher for a team of 3"
+```
+
+**Both in Parallel** - when comparing your code against current standards:
+```bash
+/oracle "Is our auth middleware following current OWASP guidelines?"
+/oracle "Does our error handling match RFC 7807?"
+```
 
 **Features:**
-- Uses [Codex TypeScript SDK](https://github.com/openai/codex/tree/main/sdk/typescript) with streaming output
-- Read-only sandbox (can explore but not modify your codebase)
-- Real-time progress indicators
+- **Repo mode**: [Codex SDK](https://github.com/openai/codex/tree/main/sdk/typescript) with read-only sandbox, explores files autonomously
+- **Web mode**: [@steipete/oracle](https://github.com/steipete/oracle) with browser automation for Deep Research
+- Intelligent routing based on question type
+- Parallel execution for comprehensive analysis
+- Asks clarifying questions when routing is unclear
 
-**Usage:**
-```bash
-/oracle "What's the best approach for implementing rate limiting?"
+**Second Opinion Workflow:**
+
+Best practice: review diffs and tests, not raw code.
+```
+1. Primary agent writes code
+2. Package context (diff + key files + test results)
+3. Oracle reviews (bugs, edge cases, missing tests)
+4. Apply fixes, run tests
+5. Repeat until critique converges
 ```
 
 **Response Structure:**
-
-Oracle uses a tiered response format for actionable advice:
-
 ```
-### Essential (Always Include)
-- **Bottom Line**: Direct answer in 1-2 sentences
-- **Action Plan**: Concrete next steps (numbered)
+### Essential
+- **Bottom Line**: Direct answer (1-2 sentences)
+- **Action Plan**: Numbered next steps
 - **Effort Estimate**: Quick (<1h) | Short (1-4h) | Medium (1-2d) | Large (3d+)
 
-### Expanded (When Relevant)
-- **Reasoning**: Why this approach over alternatives
-- **Trade-offs**: What you gain vs what you sacrifice
-- **Dependencies**: External factors or prerequisites
+### Expanded (when relevant)
+- **Reasoning**, **Trade-offs**, **Dependencies**
 
-### Edge Cases (When Applicable)
-- **Escalation Triggers**: When to reconsider this approach
-- **Alternatives**: Backup options if primary fails
-- **Gotchas**: Common mistakes to avoid
+### Edge Cases (when applicable)
+- **Escalation Triggers**, **Alternatives**, **Gotchas**
 ```
-
-**Philosophy:**
-- Bias toward simplicity - the right solution is typically the least complex
-- Leverage existing code/patterns before adding dependencies
-- Prioritize developer experience over theoretical optimization
 
 ---
 
