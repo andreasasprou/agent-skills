@@ -15,7 +15,7 @@ Two complementary modes for different types of questions.
 | Truth Location | Mode | Model |
 |----------------|------|-------|
 | In our code | Repo | `gpt-5.2` xhigh via Codex SDK |
-| External (docs, standards, comparisons) | Web | `5.2 Thinking` (default) |
+| External (docs, standards, comparisons) | Web | `5.2 Thinking` + Heavy (default) |
 | Complex research needing web synthesis | Web | `gpt-5.2-pro` (escalation) |
 | Both (compare impl vs standards) | Parallel | Run both modes |
 
@@ -34,14 +34,14 @@ Capabilities: Explores files, runs commands, searches web (read-only sandbox).
 ### Web Oracle (external research)
 
 ```bash
-# Default: 5.2 Thinking (extended reasoning)
-npx -y @steipete/oracle --engine browser --model "5.2 Thinking" -p "question"
+# Default: 5.2 Thinking with Heavy reasoning
+npx -y @steipete/oracle --engine browser --model "5.2 Thinking" --browser-thinking-time heavy -p "question"
 
 # Escalation: gpt-5.2-pro (Deep Research - for complex multi-source research)
 npx -y @steipete/oracle --engine browser --model gpt-5.2-pro -p "question"
 
 # Include repo context (curated files)
-npx -y @steipete/oracle --engine browser --model "5.2 Thinking" \
+npx -y @steipete/oracle --engine browser --model "5.2 Thinking" --browser-thinking-time heavy \
   --file "src/auth/**/*.ts" \
   --file "!**/*.test.ts" \
   -p "question with context"
@@ -155,5 +155,5 @@ tail -100 /path/to/output
 | Mode | Model | Use When |
 |------|-------|----------|
 | Repo | `gpt-5.2` xhigh | Codebase questions, finding gaps, code review |
-| Web (default) | `5.2 Thinking` | External research, best practices, comparisons |
+| Web (default) | `5.2 Thinking` + Heavy | External research, best practices, comparisons |
 | Web (escalation) | `gpt-5.2-pro` | Complex multi-source research, deep synthesis |
