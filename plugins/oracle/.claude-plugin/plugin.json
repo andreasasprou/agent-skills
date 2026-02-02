@@ -1,7 +1,7 @@
 {
   "name": "oracle",
   "description": "Strategic technical advisor with two modes. REPO MODE (GPT-5.2 Codex) explores your codebase to find gaps and review code. WEB MODE (5.2 Thinking / GPT-5.2-pro) researches external info like best practices and library comparisons. Run both in parallel to compare your implementation against current standards.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": {
     "name": "Andreas Asprou"
   },
