@@ -1,12 +1,12 @@
 {
   "name": "oracle",
-  "description": "Strategic technical advisor with two modes. REPO MODE (GPT-5.2 Codex) explores your codebase to find gaps and review code. WEB MODE (5.2 Thinking / GPT-5.2-pro) researches external info like best practices and library comparisons. Run both in parallel to compare your implementation against current standards.",
-  "version": "2.0.1",
+  "description": "Strategic technical advisor with two modes. REPO MODE (gpt-5.3-codex) explores your codebase to find gaps and review code. WEB MODE (5.2 Thinking / GPT-5.2-pro) researches external info like best practices and library comparisons. Run both in parallel to compare your implementation against current standards.",
+  "version": "2.0.2",
   "author": {
     "name": "Andreas Asprou"
   },
   "homepage": "https://github.com/andreasasprou/agent-skills",
   "repository": "https://github.com/andreasasprou/agent-skills",
   "license": "MIT",
-  "keywords": ["oracle", "gpt-5.2", "codex", "reasoning", "advisor", "research", "second-opinion"]
+  "keywords": ["oracle", "gpt-5.3-codex", "codex", "reasoning", "advisor", "research", "second-opinion"]
 }

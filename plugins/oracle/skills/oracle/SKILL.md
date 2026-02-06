@@ -14,7 +14,7 @@ Two complementary modes for different types of questions.
 
 | Truth Location | Mode | Model |
 |----------------|------|-------|
-| In our code | Repo | `gpt-5.2` xhigh via Codex SDK |
+| In our code | Repo | `gpt-5.3-codex` xhigh via Codex SDK |
 | External (docs, standards, comparisons) | Web | `5.2 Thinking` + Heavy (default) |
 | Complex research needing web synthesis | Web | `gpt-5.2-pro` (escalation) |
 | Both (compare impl vs standards) | Parallel | Run both modes |
@@ -154,6 +154,6 @@ tail -100 /path/to/output
 
 | Mode | Model | Use When |
 |------|-------|----------|
-| Repo | `gpt-5.2` xhigh | Codebase questions, finding gaps, code review |
+| Repo | `gpt-5.3-codex` xhigh | Codebase questions, finding gaps, code review |
 | Web (default) | `5.2 Thinking` + Heavy | External research, best practices, comparisons |
 | Web (escalation) | `gpt-5.2-pro` | Complex multi-source research, deep synthesis |
