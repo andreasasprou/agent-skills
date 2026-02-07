@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /**
  * Oracle - Strategic Technical Advisor
- * Uses Codex TypeScript SDK with gpt-5.3-codex and streaming output
+ * Uses Codex TypeScript SDK with gpt-5.2 and streaming output
  */
 
 import { Codex, type ThreadEvent, type ThreadItem } from "@openai/codex-sdk";
@@ -38,7 +38,7 @@ const codex = new Codex();
 
 // Start a new thread with configuration
 const thread = codex.startThread({
-  model: "gpt-5.3-codex",
+  model: "gpt-5.2",
   modelReasoningEffort: "xhigh",
   approvalPolicy: "never",
   sandboxMode: "read-only",
