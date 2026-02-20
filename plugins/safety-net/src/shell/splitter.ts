@@ -144,11 +144,13 @@ function pushSegment(state: SplitterState, operator: Operator): void {
  */
 export function hasUnparseableConstructs(command: string): boolean {
 	// Heredocs: <<EOF, <<-EOF, <<'EOF', <<-'EOF', <<"EOF"
-	// BUT exclude $(cat <<EOF pattern which is safe string generation
-	// used by Claude Code for commit messages and PR bodies
+	// BUT exclude safe patterns that use heredocs for stdin input:
+	// - $(cat <<EOF) - safe string generation for commit messages/PR bodies
+	// - agent-browser eval --stdin <<EOF - browser automation JS evaluation
 	if (/<<-?['"]?\w+/.test(command)) {
-		// Allow heredocs inside $(cat << pattern - this is safe string generation
-		if (!/\$\(cat\s+<</.test(command)) {
+		const isCatHeredoc = /\$\(cat\s+<</.test(command);
+		const isStdinHeredoc = /--stdin\s+<</.test(command);
+		if (!isCatHeredoc && !isStdinHeredoc) {
 			return true;
 		}
 	}

@@ -1,6 +1,6 @@
 {
 	"name": "safety-net",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Block destructive commands across Claude Code and OpenCode",
 	"type": "module",
 	"private": true,
