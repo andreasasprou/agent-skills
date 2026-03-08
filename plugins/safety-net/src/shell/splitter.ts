@@ -143,10 +143,15 @@ function pushSegment(state: SplitterState, operator: Operator): void {
  * Used to determine if we should fail-open or fail-closed
  */
 export function hasUnparseableConstructs(command: string): boolean {
+	// Agent Browser commands are always safe — skip all unparseable checks
+	if (/(?:^|\s|&&|\|\||;)agent-browser\b/.test(command)) {
+		return false;
+	}
+
 	// Heredocs: <<EOF, <<-EOF, <<'EOF', <<-'EOF', <<"EOF"
 	// BUT exclude safe patterns that use heredocs for stdin input:
 	// - $(cat <<EOF) - safe string generation for commit messages/PR bodies
-	// - agent-browser eval --stdin <<EOF - browser automation JS evaluation
+	// - --stdin <<EOF - stdin heredocs for browser automation, etc.
 	if (/<<-?['"]?\w+/.test(command)) {
 		const isCatHeredoc = /\$\(cat\s+<</.test(command);
 		const isStdinHeredoc = /--stdin\s+<</.test(command);

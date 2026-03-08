@@ -1,7 +1,7 @@
 {
   "name": "safety-net",
   "description": "Block destructive shell commands before execution. Prevents rm -rf, git push --force, docker system prune, kubectl delete, terraform destroy, cloud deletions (AWS/GCP/Azure), database drops, and 200+ dangerous patterns.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Andreas Asprou"
   },
