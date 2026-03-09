@@ -230,26 +230,7 @@ export function analyzeGitCommand(
 		}
 	}
 
-	// git rebase (history rewrite - warn by default)
-	if (subcommand === "rebase") {
-		// Allow abort/continue/skip
-		if (
-			args.includes("--abort") ||
-			args.includes("--continue") ||
-			args.includes("--skip")
-		) {
-			return { decision: "allow" };
-		}
-		return {
-			decision: "warn",
-			rule: "git-rebase",
-			category: "git",
-			reason:
-				"git rebase rewrites commit history. Ensure you understand the implications.",
-			matchedTokens: ["git", "rebase"],
-			confidence: "medium",
-		};
-	}
+	// git rebase - allow (easily reversible via --abort or reflog)
 
 	// git filter-repo / filter-branch (history rewrite)
 	if (subcommand === "filter-repo" || subcommand === "filter-branch") {
